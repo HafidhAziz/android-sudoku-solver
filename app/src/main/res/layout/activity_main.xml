@@ -1,7 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/dp16">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/bg_top"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/bg_blue_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_sudoku"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="@dimen/dp16"
+            android:src="@drawable/ic_sudoku"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="contentDescription" />
+
+        <Button
+            android:id="@+id/btn_new_game"
+            style="@style/ButtonOrange"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginStart="@dimen/dp16"
+            android:text="@string/new_game"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_timer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_time_remaining_label" />
+
+        <TextView
+            android:id="@+id/tv_time_remaining_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
+            android:text="@string/time_remaining"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_sudoku" />
+
+        <TextView
+            android:id="@+id/tv_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp4"
+            android:layout_marginEnd="@dimen/dp16"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time_remaining_label"
+            tools:text="00:01:45" />
+
+        <TableLayout
+            android:id="@+id/table_sudoku"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp0"
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp24"
+            android:layout_marginEnd="@dimen/dp16"
+            android:layout_marginBottom="@dimen/dp8"
+            app:layout_constraintBottom_toTopOf="@+id/numbers_recycler"
+            app:layout_constraintTop_toBottomOf="@+id/btn_new_game" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/numbers_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
+            android:layout_marginBottom="@dimen/dp8"
+            app:layout_constraintBottom_toTopOf="@+id/btn_solve"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_number" />
+
+        <Button
+            android:id="@+id/btn_solve"
+            style="@style/ButtonGreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
+            android:text="@string/solve_me"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

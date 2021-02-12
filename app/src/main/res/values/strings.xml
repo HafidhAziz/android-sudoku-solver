@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">sudoku-solver</string>
+
+    <string name="new_game">+ New Game</string>
+    <string name="time_remaining">Time Remaining</string>
+    <string name="solve_me">Solve Me!</string>
 </resources>
