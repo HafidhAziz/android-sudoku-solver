@@ -11,22 +11,46 @@
         <View
             android:id="@+id/bg_top"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="200dp"
             android:background="@drawable/bg_blue_dark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp8"
+            android:text="@string/sudoku_label"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp18"
+            app:layout_constraintBottom_toBottomOf="@id/iv_sudoku"
+            app:layout_constraintEnd_toStartOf="@id/iv_sudoku"
+            app:layout_constraintTop_toTopOf="@id/iv_sudoku" />
+
         <ImageView
             android:id="@+id/iv_sudoku"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="@dimen/dp16"
             android:src="@drawable/ic_sudoku"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="contentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp8"
+            android:text="@string/solver_label"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp18"
+            app:layout_constraintBottom_toBottomOf="@id/iv_sudoku"
+            app:layout_constraintStart_toEndOf="@id/iv_sudoku"
+            app:layout_constraintTop_toTopOf="@id/iv_sudoku" />
 
         <Button
             android:id="@+id/btn_new_game"
@@ -43,7 +67,7 @@
             android:id="@+id/tv_time_remaining_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp24"
             android:layout_marginEnd="@dimen/dp16"
             android:text="@string/time_remaining"
             android:textColor="@color/white"
@@ -56,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp4"
             android:layout_marginEnd="@dimen/dp16"
+            android:text="@string/time_default"
             android:textColor="@color/white"
             android:textSize="@dimen/sp18"
             app:layout_constraintEnd_toEndOf="parent"
