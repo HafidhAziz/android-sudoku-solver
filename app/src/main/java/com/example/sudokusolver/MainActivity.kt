@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.*
 import com.example.sudokusolver.adapter.SudokuNumberAdapter
 import com.example.sudokusolver.data.SudokuNumber
 import com.example.sudokusolver.databinding.ActivityMainBinding
+import com.example.sudokusolver.util.TableBoard
 import com.example.sudokusolver.util.TableEntryTextView
 import com.example.sudokusolver.util.toPx
 import java.util.concurrent.TimeUnit
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     private lateinit var numberAdapter: SudokuNumberAdapter
     private lateinit var numberList: MutableList<SudokuNumber>
     private lateinit var countDownTimer: CountDownTimer
+    private lateinit var tableBoard: TableBoard
 
     companion object {
         private const val DEFAULT_TIME = 600L
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        tableBoard = TableBoard(BOARD_SIZE)
 
         setupView()
         setupSudokuNumberAdapter()
@@ -95,10 +98,28 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
         resetTimer()
         clearBoard()
         manageSolveButton(true)
+        if (tableBoard.getEntriesSize() > 0) {
+            tableBoard.deleteData()
+        }
     }
 
     override fun solveGame() {
-        // todo solve game
+        if (tableBoard.checkIsSolvable()) {
+            cancelTimer()
+            resetItemBoardBackground(disableBoard = false)
+            manageSolveButton(false)
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.solve_me_success),
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.solve_me_error),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     override fun manageSolveButton(enable: Boolean) {
@@ -160,6 +181,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                 val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
                 if (textView.isSelected) {
                     textView.text = number
+                    tableBoard.setData(textView.id, textView.text.toString().toInt())
                 }
             }
         }
