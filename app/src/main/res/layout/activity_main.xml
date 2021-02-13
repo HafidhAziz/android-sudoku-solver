@@ -90,12 +90,11 @@
         <TableLayout
             android:id="@+id/table_sudoku"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp0"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp16"
             android:layout_marginTop="@dimen/dp24"
             android:layout_marginEnd="@dimen/dp16"
-            android:layout_marginBottom="@dimen/dp16"
-            app:layout_constraintBottom_toTopOf="@+id/numbers_recycler"
+            android:background="@drawable/bg_table_layout_with_border"
             app:layout_constraintTop_toBottomOf="@+id/btn_new_game" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -105,6 +104,7 @@
             android:layout_marginStart="@dimen/dp16"
             android:layout_marginEnd="@dimen/dp16"
             android:layout_marginBottom="@dimen/dp16"
+            android:paddingTop="@dimen/dp16"
             app:layout_constraintBottom_toTopOf="@+id/btn_solve"
             tools:itemCount="1"
             tools:listitem="@layout/item_number" />

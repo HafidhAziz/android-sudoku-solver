@@ -8,6 +8,7 @@
     <string name="time_default">00:00:00</string>
     <string name="time_up">Time up</string>
     <string name="solve_me">Solve Me!</string>
+    <string name="solve_me_error">"Sudoku cannot be solved"</string>
 
     <string-array name="sudoku_numbers">
         <item>1</item>
