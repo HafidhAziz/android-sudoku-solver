@@ -8,8 +8,11 @@
     <string name="time_default">00:00:00</string>
     <string name="time_up">Time up</string>
     <string name="solve_me">Solve Me!</string>
-    <string name="solve_me_success">"Solved! Congratulations"</string>
-    <string name="solve_me_error">"Sudoku cannot be solved"</string>
+    <string name="solve_me_success">Solved! Congratulations</string>
+    <string name="solve_me_error">Sudoku cannot be solved</string>
+    <string name="solve_me_duplicate_row_error">Sudoku cannot be solved!\nDuplicate number in row found</string>
+    <string name="solve_me_duplicate_column_error">Sudoku cannot be solved!\nDuplicate number in column found</string>
+    <string name="solve_me_duplicate_box_error">"Sudoku cannot be solved!\nDuplicate number in box found"</string>
 
     <string-array name="sudoku_numbers">
         <item>1</item>

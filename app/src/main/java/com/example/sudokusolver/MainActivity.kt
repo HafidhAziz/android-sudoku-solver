@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        tableBoard = TableBoard(BOARD_SIZE)
+        tableBoard = TableBoard(BOARD_SIZE, this)
 
         setupView()
         setupSudokuNumberAdapter()
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
         } else {
             Toast.makeText(
                 applicationContext,
-                getString(R.string.solve_me_error),
+                tableBoard.getUnsolvableMessage(),
                 Toast.LENGTH_LONG
             ).show()
         }
