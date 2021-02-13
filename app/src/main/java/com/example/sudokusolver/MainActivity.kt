@@ -117,7 +117,8 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                     getString(R.string.time_up),
                     Toast.LENGTH_LONG
                 ).show()
-                clearBoard()
+                resetItemBoardBackground()
+                manageSolveButton(false)
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -184,13 +185,13 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
             for (j in 0 until BOARD_SIZE) {
                 val textView = TableEntryTextView(this)
                 textView.id = i * BOARD_SIZE + j //sets id between 0 and 80
-                textView.setEditableCell(false)
-                setupBoardBackground(textView, i, j)
                 textView.setOnClickListener {
                     resetItemBoardBackground()
                     textView.isSelected = true
                     setupBoardBackground(textView, i, j)
                 }
+                textView.setEditableCell(false)
+                setupBoardBackground(textView, i, j)
                 binding.tableSudoku.post {
                     textView.height = binding.tableSudoku.width / BOARD_SIZE
                 }
