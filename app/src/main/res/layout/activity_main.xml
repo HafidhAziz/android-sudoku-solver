@@ -87,25 +87,35 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_time_remaining_label"
             tools:text="00:01:45" />
 
-        <TableLayout
-            android:id="@+id/table_sudoku"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/table_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp16"
             android:layout_marginTop="@dimen/dp24"
             android:layout_marginEnd="@dimen/dp16"
             android:background="@drawable/bg_table_layout_with_border"
-            app:layout_constraintTop_toBottomOf="@+id/btn_new_game" />
+            android:padding="@dimen/dp3"
+            app:layout_constraintTop_toBottomOf="@+id/btn_new_game">
+
+            <TableLayout
+                android:id="@+id/table_sudoku"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_height="300dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/numbers_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
             android:layout_marginEnd="@dimen/dp16"
             android:layout_marginBottom="@dimen/dp16"
-            android:paddingTop="@dimen/dp16"
-            app:layout_constraintBottom_toTopOf="@+id/btn_solve"
+            app:layout_constraintTop_toBottomOf="@id/table_container"
             tools:itemCount="1"
             tools:listitem="@layout/item_number" />
 

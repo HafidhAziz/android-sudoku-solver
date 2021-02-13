@@ -31,7 +31,6 @@ class TableEntryTextView : AppCompatTextView {
     }
 
     private fun initAttribute() {
-        setBackgroundResource(R.drawable.bg_cell_default)
         gravity = Gravity.CENTER
         layoutParams = TableRow.LayoutParams(
             0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f

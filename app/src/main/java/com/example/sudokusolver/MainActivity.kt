@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickItemListener {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var numberAdapter: SudokuNumberAdapter
     private lateinit var numberList: MutableList<SudokuNumber>
     private lateinit var countDownTimer: CountDownTimer
@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
         resetTimer()
         clearBoard()
         manageSolveButton(true)
-//        mBoard.deleteData()
     }
 
     override fun solveGame() {
@@ -111,17 +110,13 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     }
 
     override fun resetTimer() {
-        if (this::countDownTimer.isInitialized) {
-            countDownTimer.cancel()
-        }
         countDownTimer = object : CountDownTimer((DEFAULT_TIME * MILLISECONDS), MILLISECONDS) {
             override fun onFinish() {
                 Toast.makeText(
                     this@MainActivity,
                     getString(R.string.time_up),
                     Toast.LENGTH_LONG
-                )
-                    .show()
+                ).show()
                 clearBoard()
             }
 
@@ -152,7 +147,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     }
 
     override fun onDestroy() {
-        countDownTimer.cancel()
+        cancelTimer()
         super.onDestroy()
     }
 
@@ -169,16 +164,14 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     }
 
     override fun clearBoard() {
-        ignoreNextText = true
-        for (i in 0 until binding.tableSudoku.childCount) { //loops through all rows in tableLayout
-            val tempTR = binding.tableSudoku.getChildAt(i) as TableRow //sets a temp TableRow
-            for (j in 0 until tempTR.childCount) { //loops through all textviews in current TableRow
+        for (i in 0 until binding.tableSudoku.childCount) {
+            val tempTR = binding.tableSudoku.getChildAt(i) as TableRow
+            for (j in 0 until tempTR.childCount) {
                 val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
-                textView.text = "" // clear all values in cells
+                textView.text = ""
                 textView.setEditableCell(true)
             }
         }
-        ignoreNextText = false
     }
 
     override fun setupTableBoard() {
@@ -186,35 +179,54 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
             val tableRow = TableRow(this)
             tableRow.layoutParams = TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT
-            ) //sets width and height
+            )
             tableRow.id = i + 100 //sets id between 100 and 100 + boardSize
             for (j in 0 until BOARD_SIZE) {
                 val textView = TableEntryTextView(this)
                 textView.id = i * BOARD_SIZE + j //sets id between 0 and 80
+                textView.setEditableCell(false)
+                setupBoardBackground(textView, i, j)
                 textView.setOnClickListener {
                     resetItemBoardBackground()
                     textView.isSelected = true
-                    it.setBackgroundResource(R.drawable.bg_cell_selected)
+                    setupBoardBackground(textView, i, j)
                 }
-                textView.setEditableCell(false)
                 binding.tableSudoku.post {
                     textView.height = binding.tableSudoku.width / BOARD_SIZE
                 }
                 //http://stackoverflow.com/questions/3591784/getwidth-and-getheight-of-view-returns-0
                 tableRow.addView(textView)
             }
-            binding.tableSudoku.addView(tableRow) //add the row to the table
+            binding.tableSudoku.addView(tableRow)
+        }
+    }
+
+    override fun setupBoardBackground(
+        textView: TableEntryTextView,
+        positionX: Int,
+        positionY: Int
+    ) {
+        if ((positionX + positionY) % 2 == 0) {
+            textView.setBackgroundResource(if (textView.isSelected) R.drawable.bg_cell_default_blue_dark_selected else R.drawable.bg_cell_default_blue_dark)
+        } else {
+            textView.setBackgroundResource(if (textView.isSelected) R.drawable.bg_cell_default_blue_soft_selected else R.drawable.bg_cell_default_blue_soft)
         }
     }
 
     override fun resetItemBoardBackground() {
-        for (i in 0 until binding.tableSudoku.childCount) { //loops through all rows in tableLayout
-            val tempTR = binding.tableSudoku.getChildAt(i) as TableRow //sets a temp TableRow
-            for (j in 0 until tempTR.childCount) { //loops through all textviews in current TableRow
+        for (i in 0 until binding.tableSudoku.childCount) {
+            val tempTR = binding.tableSudoku.getChildAt(i) as TableRow
+            for (j in 0 until tempTR.childCount) {
                 val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
                 textView.isSelected = false
-                textView.setBackgroundResource(R.drawable.bg_cell_default)
+                setupBoardBackground(textView, i, j)
             }
+        }
+    }
+
+    override fun cancelTimer() {
+        if (this::countDownTimer.isInitialized) {
+            countDownTimer.cancel()
         }
     }
 
