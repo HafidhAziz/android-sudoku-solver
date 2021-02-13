@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     }
 
     override fun resetTimer() {
+        cancelTimer()
         countDownTimer = object : CountDownTimer((DEFAULT_TIME * MILLISECONDS), MILLISECONDS) {
             override fun onFinish() {
                 Toast.makeText(
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                     getString(R.string.time_up),
                     Toast.LENGTH_LONG
                 ).show()
-                resetItemBoardBackground()
+                resetItemBoardBackground(disableBoard = true)
                 manageSolveButton(false)
             }
 
@@ -186,12 +187,12 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                 val textView = TableEntryTextView(this)
                 textView.id = i * BOARD_SIZE + j //sets id between 0 and 80
                 textView.setOnClickListener {
-                    resetItemBoardBackground()
+                    resetItemBoardBackground(disableBoard = false)
                     textView.isSelected = true
-                    setupBoardBackground(textView, i, j)
+                    setupItemBoardBackground(textView, i, j)
                 }
                 textView.setEditableCell(false)
-                setupBoardBackground(textView, i, j)
+                setupItemBoardBackground(textView, i, j)
                 binding.tableSudoku.post {
                     textView.height = binding.tableSudoku.width / BOARD_SIZE
                 }
@@ -202,7 +203,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
         }
     }
 
-    override fun setupBoardBackground(
+    override fun setupItemBoardBackground(
         textView: TableEntryTextView,
         positionX: Int,
         positionY: Int
@@ -214,13 +215,16 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
         }
     }
 
-    override fun resetItemBoardBackground() {
+    override fun resetItemBoardBackground(disableBoard: Boolean) {
         for (i in 0 until binding.tableSudoku.childCount) {
             val tempTR = binding.tableSudoku.getChildAt(i) as TableRow
             for (j in 0 until tempTR.childCount) {
                 val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
                 textView.isSelected = false
-                setupBoardBackground(textView, i, j)
+                setupItemBoardBackground(textView, i, j)
+                if (disableBoard) {
+                    textView.setEditableCell(false)
+                }
             }
         }
     }

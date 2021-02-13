@@ -16,11 +16,12 @@ interface MainView {
     fun getTimeoutFormat(closedTimeout: Long?): String
     fun clearBoard()
     fun setupTableBoard()
-    fun setupBoardBackground(
+    fun setupItemBoardBackground(
         textView: TableEntryTextView,
         positionX: Int,
         positionY: Int
     )
-    fun resetItemBoardBackground()
+
+    fun resetItemBoardBackground(disableBoard: Boolean)
     fun cancelTimer()
 }
