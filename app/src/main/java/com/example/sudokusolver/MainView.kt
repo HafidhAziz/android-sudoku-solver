@@ -12,4 +12,7 @@ interface MainView {
     fun manageSolveButton(enable : Boolean)
     fun resetTimer()
     fun getTimeoutFormat(closedTimeout: Long?): String
+    fun clearBoard()
+    fun setupTableBoard()
+    fun resetItemBoardBackground()
 }

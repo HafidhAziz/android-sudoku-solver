@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.TableRow
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.*
 import com.example.sudokusolver.adapter.SudokuNumberAdapter
 import com.example.sudokusolver.data.SudokuNumber
 import com.example.sudokusolver.databinding.ActivityMainBinding
+import com.example.sudokusolver.util.TableEntryTextView
 import com.example.sudokusolver.util.toPx
 import java.util.concurrent.TimeUnit
 
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     companion object {
         private const val DEFAULT_TIME = 600L
         private const val MILLISECONDS = 1000L
+        private const val BOARD_SIZE = 9
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
 
         setupView()
         setupSudokuNumberAdapter()
+        setupTableBoard()
     }
 
     override fun setupView() {
@@ -48,10 +52,14 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                 solveGame()
             }
         }
+        manageSolveButton(false)
     }
 
     override fun setupSudokuNumberAdapter() {
-        val staggeredGridLayoutManager = StaggeredGridLayoutManager(9, RecyclerView.VERTICAL)
+        val staggeredGridLayoutManager = StaggeredGridLayoutManager(
+            BOARD_SIZE,
+            RecyclerView.VERTICAL
+        )
         binding.numbersRecycler.let {
             it.hasFixedSize()
             it.itemAnimator = null
@@ -85,8 +93,9 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
 
     override fun startNewGame() {
         resetTimer()
+        clearBoard()
         manageSolveButton(true)
-        // todo reset board
+//        mBoard.deleteData()
     }
 
     override fun solveGame() {
@@ -113,7 +122,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                     Toast.LENGTH_LONG
                 )
                     .show()
-                // todo reset board
+                clearBoard()
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -148,7 +157,65 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     }
 
     override fun onClickItemListener(number: String) {
-        //todo sudoku choose number
+        for (i in 0 until binding.tableSudoku.childCount) { //loops through all rows in tableLayout
+            val tempTR = binding.tableSudoku.getChildAt(i) as TableRow //sets a temp TableRow
+            for (j in 0 until tempTR.childCount) { //loops through all textviews in current TableRow
+                val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
+                if (textView.isSelected) {
+                    textView.text = number
+                }
+            }
+        }
+    }
+
+    override fun clearBoard() {
+        ignoreNextText = true
+        for (i in 0 until binding.tableSudoku.childCount) { //loops through all rows in tableLayout
+            val tempTR = binding.tableSudoku.getChildAt(i) as TableRow //sets a temp TableRow
+            for (j in 0 until tempTR.childCount) { //loops through all textviews in current TableRow
+                val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
+                textView.text = "" // clear all values in cells
+                textView.setEditableCell(true)
+            }
+        }
+        ignoreNextText = false
+    }
+
+    override fun setupTableBoard() {
+        for (i in 0 until BOARD_SIZE) {
+            val tableRow = TableRow(this)
+            tableRow.layoutParams = TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT
+            ) //sets width and height
+            tableRow.id = i + 100 //sets id between 100 and 100 + boardSize
+            for (j in 0 until BOARD_SIZE) {
+                val textView = TableEntryTextView(this)
+                textView.id = i * BOARD_SIZE + j //sets id between 0 and 80
+                textView.setOnClickListener {
+                    resetItemBoardBackground()
+                    textView.isSelected = true
+                    it.setBackgroundResource(R.drawable.bg_cell_selected)
+                }
+                textView.setEditableCell(false)
+                binding.tableSudoku.post {
+                    textView.height = binding.tableSudoku.width / BOARD_SIZE
+                }
+                //http://stackoverflow.com/questions/3591784/getwidth-and-getheight-of-view-returns-0
+                tableRow.addView(textView)
+            }
+            binding.tableSudoku.addView(tableRow) //add the row to the table
+        }
+    }
+
+    override fun resetItemBoardBackground() {
+        for (i in 0 until binding.tableSudoku.childCount) { //loops through all rows in tableLayout
+            val tempTR = binding.tableSudoku.getChildAt(i) as TableRow //sets a temp TableRow
+            for (j in 0 until tempTR.childCount) { //loops through all textviews in current TableRow
+                val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
+                textView.isSelected = false
+                textView.setBackgroundResource(R.drawable.bg_cell_default)
+            }
+        }
     }
 
 }
