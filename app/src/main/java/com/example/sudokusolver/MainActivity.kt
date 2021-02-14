@@ -105,6 +105,17 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
 
     override fun solveGame() {
         if (tableBoard.checkIsSolvable()) {
+            var textView: TableEntryTextView?
+            val size: Int = tableBoard.getSize()
+            for (i in 0 until size) {
+                for (j in 0 until size) {
+                    textView = findViewById(i * size + j)
+                    if (textView != null) {
+                        textView.text = tableBoard.getSolvedData(i * size + j).toString()
+                        textView.setEditableCell(false)
+                    }
+                }
+            }
             cancelTimer()
             resetItemBoardBackground(disableBoard = false)
             manageSolveButton(false)

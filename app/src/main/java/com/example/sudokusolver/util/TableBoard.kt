@@ -11,6 +11,7 @@ import java.util.*
 class TableBoard(private var size: Int, private val context: Context) {
 
     private var data: Array<IntArray> = Array(size) { IntArray(size) }
+    private var solvedData: Array<IntArray> = Array(size) { IntArray(size) }
     private var entriesData: ArrayList<Coordinate>? = null
 
     private var duplicateRowFound: Boolean
@@ -44,7 +45,12 @@ class TableBoard(private var size: Int, private val context: Context) {
     }
 
     fun checkIsSolvable(): Boolean {
-        return !duplicateRowFound && !duplicateColumnFound && !duplicateBoxFound
+        val solverAlgorithm = SudokuSolver()
+        for (i in 0 until size) {
+            System.arraycopy(data[i], 0, solvedData[i], 0, size)
+        }
+        return !duplicateRowFound && !duplicateColumnFound && !duplicateBoxFound &&
+                solverAlgorithm.solve(solvedData)
     }
 
     fun getEntriesSize(): Int {
@@ -61,6 +67,14 @@ class TableBoard(private var size: Int, private val context: Context) {
         duplicateRowFound = false
         duplicateColumnFound = false
         duplicateBoxFound = false
+    }
+
+    fun getSolvedData(index: Int): Int {
+        return solvedData[index % size][index / size]
+    }
+
+    fun getSize(): Int {
+        return size
     }
 
     private fun checkDuplicateDataInput(indexById: Int) {
