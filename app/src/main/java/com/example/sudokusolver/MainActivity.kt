@@ -30,6 +30,10 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     private lateinit var countDownTimer: CountDownTimer
     private lateinit var tableBoard: TableBoard
 
+    private var isTimerRunning = false
+    private var isPaused = false
+    private var timeRemaining: Long = 0L
+
     companion object {
         private const val DEFAULT_TIME = 600L
         private const val MILLISECONDS = 1000L
@@ -53,6 +57,18 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
             }
             btnSolve.setOnClickListener {
                 solveGame()
+            }
+            ivPlayPause.setOnClickListener {
+                if (isTimerRunning) {
+                    countDownTimer.cancel()
+                    if (isPaused) {
+                        resetTimer()
+                    }
+                    isPaused = !isPaused
+                    ivPlayPause.setImageResource(if (isPaused) R.drawable.ic_play else R.drawable.ic_pause)
+                    manageSolveButton(!isPaused)
+                    resetItemBoardBackground(disableBoard = isPaused)
+                }
             }
         }
         manageSolveButton(false)
@@ -95,6 +111,7 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     }
 
     override fun startNewGame() {
+        cancelTimer()
         resetTimer()
         clearBoard()
         manageSolveButton(true)
@@ -116,8 +133,9 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                     }
                 }
             }
+            binding.ivPlayPause.setImageResource(R.drawable.ic_stop)
             cancelTimer()
-            resetItemBoardBackground(disableBoard = false)
+            resetItemBoardBackground(disableBoard = true)
             manageSolveButton(false)
             Toast.makeText(
                 applicationContext,
@@ -142,22 +160,28 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
     }
 
     override fun resetTimer() {
-        cancelTimer()
-        countDownTimer = object : CountDownTimer((DEFAULT_TIME * MILLISECONDS), MILLISECONDS) {
+        if (!isPaused) {
+            timeRemaining = DEFAULT_TIME * MILLISECONDS
+        }
+        countDownTimer = object : CountDownTimer(timeRemaining, MILLISECONDS) {
             override fun onFinish() {
                 Toast.makeText(
                     this@MainActivity,
                     getString(R.string.time_up),
                     Toast.LENGTH_LONG
                 ).show()
+                isTimerRunning = false
                 resetItemBoardBackground(disableBoard = true)
                 manageSolveButton(false)
             }
 
             override fun onTick(millisUntilFinished: Long) {
                 binding.tvTimer.text = getTimeoutFormat(millisUntilFinished)
+                timeRemaining = millisUntilFinished
             }
         }.start()
+        isTimerRunning = true
+        binding.ivPlayPause.setImageResource(R.drawable.ic_pause)
     }
 
     override fun getTimeoutFormat(closedTimeout: Long?): String {
@@ -255,15 +279,14 @@ class MainActivity : AppCompatActivity(), MainView, SudokuNumberAdapter.ClickIte
                 val textView: TableEntryTextView = tempTR.getChildAt(j) as TableEntryTextView
                 textView.isSelected = false
                 setupItemBoardBackground(textView, i, j)
-                if (disableBoard) {
-                    textView.setEditableCell(false)
-                }
+                textView.setEditableCell(!disableBoard)
             }
         }
     }
 
     override fun cancelTimer() {
         if (this::countDownTimer.isInitialized) {
+            isTimerRunning = false
             countDownTimer.cancel()
         }
     }
